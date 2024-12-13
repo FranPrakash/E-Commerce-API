@@ -16,8 +16,6 @@ import java.util.List;
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 {
-    //private DataSource dataSource;
-
     public MySqlCategoryDao(DataSource dataSource)
     {
         super(dataSource);
@@ -47,27 +45,40 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category getById(int categoryId)
     {
-        // get category by id
-        return null;
+        // TODO: get category by id
+        Category myCategory = new Category();
+        String sql = "SELECT * FROM categories WHERE category_id = "+categoryId;
+        try(Connection connection = getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rows = preparedStatement.executeQuery(sql);
+            while(rows.next()){
+                myCategory.setCategoryId(rows.getInt("category_id"));
+                myCategory.setName(rows.getString("name"));
+                myCategory.setDescription(rows.getString("description"));
+                break;
+            }
+        }
+        catch (SQLException e){ System.out.println(e); }
+        return myCategory;
     }
 
     @Override
     public Category create(Category category)
     {
-        // create a new category
+        // TODO: create a new category
         return null;
     }
 
     @Override
     public void update(int categoryId, Category category)
     {
-        // update category
+        // TODO: update category
     }
 
     @Override
     public void delete(int categoryId)
     {
-        // delete category
+        // TODO: delete category
     }
 
     private Category mapRow(ResultSet row) throws SQLException

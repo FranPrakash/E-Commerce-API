@@ -39,40 +39,41 @@ public class CategoriesController
         return categoryDao.getAllCategories();
     }
 
-    // add the appropriate annotation for a get action
+    // DONE: add the appropriate annotation for a get action
+    @GetMapping(path = "/categories/{id}")
     public Category getById(@PathVariable int id)
     {
-        // TODO: get the category by id
-        return null;
+        // DONE: get the category by id
+        return categoryDao.getById(id);
     }
 
-    // the url to return all products in category 1 would look like this
+    // TODO: the url to return all products in category 1 would look like this
     // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
+    @GetMapping("/categories/{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
         // TODO: get a list of product by categoryId
         return null;
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
+    // TODO: add annotation to call this method for a POST action
+    // TODO: add annotation to ensure that only an ADMIN can call this function
     public Category addCategory(@RequestBody Category category)
     {
         // TODO: insert the category
         return null;
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    // TODO: add annotation to call this method for a PUT (update) action - the url path must include the categoryId
+    // TODO: add annotation to ensure that only an ADMIN can call this function
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // TODO: update the category by id
     }
 
 
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    // TODO: add annotation to call this method for a DELETE action - the url path must include the categoryId
+    // TODO: add annotation to ensure that only an ADMIN can call this function
     public void deleteCategory(@PathVariable int id)
     {
         // TODO: delete the category by id
