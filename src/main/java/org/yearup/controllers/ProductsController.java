@@ -81,7 +81,9 @@ public class ProductsController
     {
         try
         {
-            productDao.create(product);
+            //productDao.create(product);
+            productDao.update(id, product);  // bug fixed, insteadof calling create method now I am calling update method so everytime a product is updated it will not create a duplicated product.
+            //have to provide 2 inputs id, products because the update method requires two input parameters - id and product.
         }
         catch(Exception ex)
         {
