@@ -3,6 +3,7 @@ package org.yearup.data.mysql;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
+import org.yearup.models.Product;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -99,12 +100,30 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     }
 
 
-
     @Override
     public void update(int categoryId, Category category)
     {
-        // TODO: update category
+        // Done: update category
+        String sql = "UPDATE categories" +
+                " SET category_id = ? " +
+                "   , name = ? " +
+                "   , description = ? " +
+                " WHERE category_id = ?;"; //Category_id is a primary key
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, category.getCategoryId());
+            statement.setString(2, category.getName());
+            statement.setString(3, category.getDescription());
+            statement.setInt(4,categoryId);
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
+
 
     @Override
     public void delete(int categoryId)

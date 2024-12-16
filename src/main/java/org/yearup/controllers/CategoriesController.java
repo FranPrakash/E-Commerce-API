@@ -91,7 +91,7 @@ public class CategoriesController {
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
         try {
             // Done: update the category by id
-            categoryDao.create(category);
+            categoryDao.update(id, category);
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
