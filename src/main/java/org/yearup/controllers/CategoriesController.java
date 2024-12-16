@@ -80,6 +80,7 @@ public class CategoriesController
         }
     }
 
+
     //DONE: add annotation to call this method for a POST action
     @PostMapping()
     //DONE: add annotation to ensure that only an ADMIN can call this function
@@ -96,11 +97,34 @@ public class CategoriesController
         }
     }
 
-    // TODO: add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // TODO: add annotation to ensure that only an ADMIN can call this function
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
+
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void updateProduct(@PathVariable int id, @RequestBody Product product)
     {
-        // TODO: update the category by id
+        try
+        {
+            productDao.create(product);
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+    }
+
+    // Done: add annotation to call this method for a PUT (update) action - the url path must include the categoryId
+    // Done: add annotation to ensure that only an ADMIN can call this function
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
+        try {
+            // Done: update the category by id
+            categoryDao.create(category);
+        }
+        catch (Exception ex)
+        {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+    }
     }
 
 
