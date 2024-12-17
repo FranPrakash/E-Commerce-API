@@ -3,10 +3,7 @@ package org.yearup.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.ProfileDao;
 import org.yearup.data.UserDao;
@@ -45,6 +42,27 @@ public class ProfileController {
             return profileDao.getByUserId(userId); //calling getUserById because that is what the method needs to return
         }
         catch(Exception e)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+    }
+
+    // Used ProductController class - updateProdcut method as an example
+    @PutMapping("")  // PUT request with no pathvariable. example: http://localhost:8080/profile
+    @PreAuthorize("isAuthenticated()") // Only allow logged in users
+    public void updateProduct(Principal principal, @RequestBody Profile profile)
+    {
+        try
+        {
+            // get the currently logged in username
+            String userName = principal.getName();
+            // find database user by userId
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+
+            profileDao.update(userId, profile);
+        }
+        catch(Exception ex)
         {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
