@@ -52,8 +52,12 @@ public class CategoriesController {
     public Category getById(@PathVariable int id) {
         // DONE: get the category by id
         try {
+            var category = categoryDao.getById(id);
 
-            return categoryDao.getById(id); //GetById method name and Id is a parameter
+            if(category == null)
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+// why is the error doing 500 instead of 404 ?
+            return category;
 
         } catch (Exception ex) {
 
@@ -64,7 +68,7 @@ public class CategoriesController {
     // DONE: the url to return list of products which have category as 1
     // https://localhost:8080/categories/1/products
     @GetMapping("{categoryId}/products") //added request in postman collection getProductByCategoryID
-    public List<Product> getProductsById(@PathVariable int categoryId) {
+    public List<Product> getProductsByCategoryId(@PathVariable int categoryId) {
         try {
             // DONE: get a list of product by categoryId
             return productDao.listByCategoryId(categoryId);
