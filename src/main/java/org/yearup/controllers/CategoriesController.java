@@ -9,20 +9,17 @@ import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
-
 import java.util.List;
 
 //Missing annotations and methods implementation
 //Added try catch in all the methods
 
 // DONE: add the annotations to make this a REST controller
-@RestController
-// add the annotation to make this controller the endpoint for the following url
-@RequestMapping("categories")
-// http://localhost:8080/categories
-// add annotation to allow cross site origin requests
-@CrossOrigin
+@RestController // add the annotation to make this controller the endpoint for the following url
+@RequestMapping("categories")// http://localhost:8080/categories
+@CrossOrigin //add annotation to allow cross site origin requests
 public class CategoriesController {
+
     private CategoryDao categoryDao;
     private ProductDao productDao;
 
@@ -38,10 +35,13 @@ public class CategoriesController {
     @PreAuthorize("permitAll()")
     // this method will respond to http://localhost:8080/categories
     public List<Category> getAll() {
+
         try {
             // DONE: find and return all categories
             return categoryDao.getAllCategories();
+
         } catch (Exception ex) {
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -52,20 +52,25 @@ public class CategoriesController {
     public Category getById(@PathVariable int id) {
         // DONE: get the category by id
         try {
+
             return categoryDao.getById(id); //GetById method name and Id is a parameter
+
         } catch (Exception ex) {
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
-    // DONE: the url to return all products in category 1 would look like this
+    // DONE: the url to return list of products which have category as 1
     // https://localhost:8080/categories/1/products
     @GetMapping("{categoryId}/products") //added request in postman collection getProductByCategoryID
     public List<Product> getProductsById(@PathVariable int categoryId) {
         try {
             // DONE: get a list of product by categoryId
             return productDao.listByCategoryId(categoryId);
+
         } catch (Exception ex) {
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -79,27 +84,33 @@ public class CategoriesController {
         try {
             // DONE: insert the category
             return categoryDao.create(category);
+
         } catch (Exception ex) {
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
     // Done: add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // Done: add annotation to ensure that only an ADMIN can call this function
+    //Created
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
         try {
-            // Done: update the category by id
+
+            //Before productDao.create(product);
             categoryDao.update(id, category);
+
         } catch (Exception ex) {
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
-
     // Done: add annotation to call this method for a DELETE action - the url path must include the categoryId
     // Done: add annotation to ensure that only an ADMIN can call this function
+    //Created this in postman
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCategory(@PathVariable int id) {
@@ -109,8 +120,11 @@ public class CategoriesController {
 
             if (category == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
             categoryDao.delete(id);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
 

@@ -27,41 +27,50 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         // DONE: get all categories
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories;";
+
         try(Connection connection = getConnection()){
+
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rows = preparedStatement.executeQuery(sql);
-            while(rows.next()){
-                Category category = new Category();
-                category.setCategoryId(rows.getInt("category_id"));
-                category.setName(rows.getString("name"));
-                category.setDescription(rows.getString("description"));
+            ResultSet row = preparedStatement.executeQuery(sql);
+
+            while(row.next()){
+                Category category = mapRow(row);
+
                 categories.add(category);
             }
         }
-        catch (SQLException e){ System.out.println(e); }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
         return categories;
     }
 
     @Override
     public Category getById(int categoryId)
     {
-        // TODO: get category by id
-        Category myCategory = new Category();
-        String sql = "SELECT * FROM categories WHERE category_id = "+categoryId;
-        try(Connection connection = getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rows = preparedStatement.executeQuery(sql);
-            while(rows.next()){
-                myCategory.setCategoryId(rows.getInt("category_id"));
-                myCategory.setName(rows.getString("name"));
-                myCategory.setDescription(rows.getString("description"));
-                break;
+        // TODO: get category by id FIX THIS METHOD
+        String sql = "SELECT * FROM categories WHERE category_id = ?";
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryId);
+
+            ResultSet row = statement.executeQuery();
+
+            if (row.next())
+            {
+                return mapRow(row);
             }
         }
-        catch (SQLException e){ System.out.println(e); }
-        return myCategory;
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
+    //DONE: IMPLEMENTED THIS METHOD
     @Override
     public Category create(Category category)
     {
@@ -99,7 +108,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         return null;
     }
 
-
+// Done: Implemented this method
     @Override
     public void update(int categoryId, Category category)
     {
@@ -124,12 +133,14 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         }
     }
 
+    //Done: implemented this method
     @Override
     public void delete(int categoryId)
     {
         // Done: delete category
         String sql = "DELETE FROM categories " +
                 " WHERE category_id = ?;";
+
         try (Connection connection = getConnection())
         {
             PreparedStatement statement = connection.prepareStatement(sql);
