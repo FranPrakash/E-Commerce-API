@@ -68,12 +68,46 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         return null;
     }
 
+    //New method. Example from mySQLProductDAO update method
     @Override
     public void update(int userId, Profile profile) {
 
+        String sql = "UPDATE profiles" +
+                " SET user_id = ? " +
+                "   , first_name = ? " +
+                "   , last_name = ? " +
+                "   , phone = ? " +
+                "   , email = ? " +
+                "   , address = ? " +
+                "   , city = ? " +
+                "   , state = ? " +
+                "   , zip =   ?" +
+                " WHERE user_id = ?;";
+
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            statement.setString(2,profile.getFirstName());
+            statement.setString(3, profile.getLastName());
+            statement.setString(4, profile.getPhone());
+            statement.setString(5, profile.getEmail());
+            statement.setString(6, profile.getEmail());
+            statement.setString(7, profile.getAddress());
+            statement.setString(8, profile.getCity());
+            statement.setString(9, profile.getZip());
+            statement.setInt(10, userId);
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    //Created method mapRow to convert a row to an object. Example MySqlProductDao class
+    //Created method mapRow to convert a row to an object. Example MySqlProductDao class mapRow method
     protected static Profile mapRow(ResultSet row) throws SQLException
     {
         int userId = row.getInt("user_id");
