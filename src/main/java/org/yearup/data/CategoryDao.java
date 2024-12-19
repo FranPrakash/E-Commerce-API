@@ -4,6 +4,8 @@ import org.yearup.models.Category;
 
 import java.util.List;
 
+//Interface have the methods to interact with the database.
+//The interface ensures that any implementation of the CategoryDao will have the same methods with the same signatures
 public interface CategoryDao
 {
     List<Category> getAllCategories();

@@ -11,33 +11,33 @@ import org.yearup.models.Category;
 import org.yearup.models.Product;
 import java.util.List;
 
-//Missing annotations and methods implementation
-//Added try catch in all the methods
+//Missing annotations and methods implementation. Added try catch in all the methods
 
-// DONE: add the annotations to make this a REST controller
-@RestController // add the annotation to make this controller the endpoint for the following url
-@RequestMapping("categories")// http://localhost:8080/categories
-@CrossOrigin //add annotation to allow cross site origin requests
+// added the annotations to make this a REST controller
+@RestController //Tell springBoot that this class will handle requests
+@RequestMapping("categories") //Specifies the base URL for the controller (/categories)
+@CrossOrigin // give permission to backend API to accept request from the front-end
 public class CategoriesController {
 
-    private CategoryDao categoryDao;
-    private ProductDao productDao;
+    private CategoryDao categoryDao; // interface interact with the database to get category
+    private ProductDao productDao; //interact with the database to get product
 
-    // DONE: create an Autowired controller to inject the categoryDao and ProductDao
-    @Autowired //Constructor
+   // Autowired controller to inject the categoryDao and ProductDao so controller can call it methods to interact with the database
+    @Autowired
     public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
         this.categoryDao = categoryDao;
         this.productDao = productDao;
     }
 
-    // DONE: add the appropriate annotation for a get action
-    @GetMapping("")
-    @PreAuthorize("permitAll()")
-    // this method will respond to http://localhost:8080/categories
-    public List<Category> getAll() {
+    // GetAll Method. Get all categories of the database
+    @GetMapping("") //This annotation is for getting request for this method.
+    @PreAuthorize("permitAll()") //Anyone can access this endpoint
 
-        try {
-            // DONE: find and return all categories
+    public List<Category> getAll() { //return list of category model class that represent the table
+
+        try { //Handle exceptions may happens when interacting with the database
+
+            //Calling getallcategories method from the MysqlcategoriesDAO. Method interact with the database to get all category from the database
             return categoryDao.getAllCategories();
 
         } catch (Exception ex) {
@@ -46,18 +46,18 @@ public class CategoriesController {
         }
     }
 
-    // DONE: add the appropriate annotation for a get action
-    @GetMapping("{id}")
+    // Method to get category by ID
+    @GetMapping("{id}") //Id here is dynamic. Can be replaced with any valid ID in the URL
     @PreAuthorize("permitAll()") //Allows any user to run this (even if they are not logged in)
     public Category getById(@PathVariable int id) {
         // DONE: get the category by id
         try {
-            var category = categoryDao.getById(id);
+            var category = categoryDao.getById(id); //Calling getByIDmethod from the MysqlcategoriesDAO.
 
-            if(category == null)
+            if(category == null) //return null if no category is found
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-// why is the error doing 500 instead of 404 ?
-            return category;
+
+            return category; //If category is found the method will return it
 
         } catch (Exception ex) {
 
@@ -65,8 +65,8 @@ public class CategoriesController {
         }
     }
 
-    // DONE: the url to return list of products which have category as 1
-    // https://localhost:8080/categories/1/products
+    //the url to return list of products which have category as 1
+    //Added request in postman collection getProductByCategoryID
     @GetMapping("{categoryId}/products") //added request in postman collection getProductByCategoryID
     public List<Product> getProductsByCategoryId(@PathVariable int categoryId) {
         try {

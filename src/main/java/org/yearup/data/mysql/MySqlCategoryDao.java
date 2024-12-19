@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
+public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao //Implements categoryDao Methods
 {
     public MySqlCategoryDao(DataSource dataSource)
     {
@@ -24,7 +24,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public List<Category> getAllCategories()
     {
-        // DONE: get all categories
+        // DONE: get all categories Query to interact with the database
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories;";
 

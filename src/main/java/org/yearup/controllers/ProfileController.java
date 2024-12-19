@@ -47,10 +47,10 @@ public class ProfileController {
         }
     }
 
-    // Used ProductController class - updateProdcut method as an example
+    // Used ProductController class - updateProduct method as an example
     @PutMapping("")  // PUT request with no pathvariable. example: http://localhost:8080/profile
     @PreAuthorize("isAuthenticated()") // Only allow logged in users
-    public void updateProduct(Principal principal, @RequestBody Profile profile)
+    public void updateProfile(Principal principal, @RequestBody Profile profile)
     {
         try
         {

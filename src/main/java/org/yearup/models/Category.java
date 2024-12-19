@@ -1,5 +1,7 @@
 package org.yearup.models;
 
+//has the same structure as the category table in the database to provide a mapping/representation between the data in the database.
+
 public class Category
 {
     private int categoryId;
@@ -9,7 +11,7 @@ public class Category
     public Category()
     {
     }
-
+//Constructor
     public Category(int categoryId, String name, String description)
     {
         this.categoryId = categoryId;
@@ -17,6 +19,7 @@ public class Category
         this.description = description;
     }
 
+    //Getters and Setters
     public int getCategoryId()
     {
         return categoryId;
