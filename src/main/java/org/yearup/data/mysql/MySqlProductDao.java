@@ -62,7 +62,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 
         return products;
     }
-
+//Interacting with the database to retrieve data
     @Override
     public List<Product> listByCategoryId(int categoryId)
     {

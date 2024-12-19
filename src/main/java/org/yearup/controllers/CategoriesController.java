@@ -11,7 +11,7 @@ import org.yearup.models.Category;
 import org.yearup.models.Product;
 import java.util.List;
 
-//Missing annotations and methods implementation. Added try catch in all the methods
+//Categories controller that will handle requests
 
 // added the annotations to make this a REST controller
 @RestController //Tell springBoot that this class will handle requests
@@ -29,7 +29,7 @@ public class CategoriesController {
         this.productDao = productDao;
     }
 
-    // GetAll Method. Get all categories of the database
+    // Get all categories of the database
     @GetMapping("") //This annotation is for getting request for this method.
     @PreAuthorize("permitAll()") //Anyone can access this endpoint
 
@@ -46,7 +46,7 @@ public class CategoriesController {
         }
     }
 
-    // Method to get category by ID
+    // Method to GET category by ID
     @GetMapping("{id}") //Id here is dynamic. Can be replaced with any valid ID in the URL
     @PreAuthorize("permitAll()") //Allows any user to run this (even if they are not logged in)
     public Category getById(@PathVariable int id) {
@@ -65,13 +65,14 @@ public class CategoriesController {
         }
     }
 
-    //the url to return list of products which have category as 1
-    //Added request in postman collection getProductByCategoryID
-    @GetMapping("{categoryId}/products") //added request in postman collection getProductByCategoryID
-    public List<Product> getProductsByCategoryId(@PathVariable int categoryId) {
+
+    //This method GET Product ByCategoryID
+    @GetMapping("{categoryId}/products") //Annotation defines this method get category id from products
+    public List<Product> getProductsByCategoryId(@PathVariable int categoryId) { // @PathVariable maps the category id to the method
+
         try {
-            // DONE: get a list of product by categoryId
-            return productDao.listByCategoryId(categoryId);
+
+            return productDao.listByCategoryId(categoryId); // return a list of product associated with the categoryId provided
 
         } catch (Exception ex) {
 
@@ -80,14 +81,15 @@ public class CategoriesController {
     }
 
 
-    //DONE: add annotation to call this method for a POST action
+    //This method handle POST requests// Add categories to the database
     @PostMapping()
-    //DONE: add annotation to ensure that only an ADMIN can call this function
+    //Annotation to ensure that only users with Admin permission can call this  method
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Category addCategory(@RequestBody Category category) {
+    public Category addCategory(@RequestBody Category category) { //Annotation to tell springboot to "read" the data from the request body
+
         try {
-            // DONE: insert the category
-            return categoryDao.create(category);
+
+            return categoryDao.create(category); //Calling create method from Categorydao which will insert the new category object into the database
 
         } catch (Exception ex) {
 
@@ -95,16 +97,15 @@ public class CategoriesController {
         }
     }
 
-    // Done: add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // Done: add annotation to ensure that only an ADMIN can call this function
-    //Created
-    @PutMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
-        try {
 
-            //Before productDao.create(product);
-            categoryDao.update(id, category);
+     //This method UPDATE the category with the provided ID
+    @PutMapping("{id}") //annotation to map the method to Update request (PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')") //annotation to allow only admins to update
+    public void updateCategory(@PathVariable int id, @RequestBody Category category) { //Path maps the ID and Request Map the JSON body of the request
+
+        try {
+            //This was one of the bug, it was productDao.create(product), Now it calls the update method to update the category
+            categoryDao.update(id, category); //Id specifies which record to update and the category
 
         } catch (Exception ex) {
 
@@ -112,20 +113,19 @@ public class CategoriesController {
         }
     }
 
-    // Done: add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // Done: add annotation to ensure that only an ADMIN can call this function
-    //Created this in postman
-    @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteCategory(@PathVariable int id) {
+    //This method DELETE a category from the database
+    @DeleteMapping("{id}") //Id of the category to be deleted
+    @PreAuthorize("hasRole('ROLE_ADMIN')") //Only admin can delete a category
+    public void deleteCategory(@PathVariable int id) { //Path map the ID
+
         try {
             // Done: delete the category by id
-            var category = categoryDao.getById(id);
+            var category = categoryDao.getById(id); //Finf the category by id
 
-            if (category == null)
+            if (category == null) //Check if there is a category if so
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
-            categoryDao.delete(id);
+            categoryDao.delete(id); //delete method is called
         }
         catch (Exception ex)
         {

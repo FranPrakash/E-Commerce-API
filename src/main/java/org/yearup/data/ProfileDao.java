@@ -1,8 +1,9 @@
 package org.yearup.data;
 import org.yearup.models.Profile;
 
+//Interface have the methods to interact with the database.
+//The interface ensures that any implementation of the ProfileDao will have the same methods with the same signatures
 
-// You will need to update the DAO to add the getByUserID and update methods
 public interface ProfileDao
 {
     Profile create(Profile profile); //Create a profile in the database when the user register

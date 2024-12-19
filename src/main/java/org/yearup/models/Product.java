@@ -1,7 +1,7 @@
 package org.yearup.models;
-
 import java.math.BigDecimal;
 
+//has the same structure as the product table in the database to provide a mapping/representation between the data in the database.
 public class Product
 {
     private int productId;
