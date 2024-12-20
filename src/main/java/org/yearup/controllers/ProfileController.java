@@ -33,9 +33,10 @@ public class ProfileController {
     }
 
 
-    // Get profile method to get user profile Data
+    // Get user profile Data
     @GetMapping("") //Handle request for the /profile path
-    @PreAuthorize("isAuthenticated()") // is authenticated because just logging in user should be able to access the profile
+    @PreAuthorize("isAuthenticated()")
+    // is authenticated because just logging in user should be able to access the profile
     public Profile getProfile(Principal principal) {
 
         try {
@@ -47,7 +48,7 @@ public class ProfileController {
             //Calling user get id to get user ID
             int userId = user.getId();
 
-             //calling getUserById to return user the user profile related to the ID
+            //calling getUserById to return user the user profile related to the ID
             return profileDao.getByUserId(userId);
 
         } catch (Exception e) {
@@ -68,7 +69,7 @@ public class ProfileController {
             //Calling user get id to get user ID and identifier the profile to be updated
             int userId = user.getId();
 
-           //update the new profile
+            //update the new profile
             profileDao.update(userId, profile);
 
         } catch (Exception ex) {
@@ -76,5 +77,10 @@ public class ProfileController {
         }
     }
 
+
 }
+
+
+
+
 
