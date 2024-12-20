@@ -1,5 +1,4 @@
 package org.yearup.data.mysql;
-
 import org.springframework.stereotype.Component;
 import org.yearup.models.Product;
 import org.yearup.data.ProductDao;
@@ -10,24 +9,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//Class that has the implementation of the methods to interact with the database (Product)
+// Follows a similar pattern
+
+@Component //Make the class a Spring Bean
 public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 {
+    //Constructor
     public MySqlProductDao(DataSource dataSource)
     {
         super(dataSource);
     }
 
+
+    // TODO: Max price was not being used in the prepared statement and the condition for min price in the sql query was wrong.
+    //When setting the filter for minimum price the system was showing products by setting that price as the maximum price
     @Override
     public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color)
     {
         List<Product> products = new ArrayList<>();
-
-        //Max price was not being used in the prepared statement and the condition for min price in the sql query was wrong.
+        //SQl Query
         String sql = "SELECT * FROM products " +
                 "WHERE (category_id = ? OR ? = -1) " +
-                "   AND (price >= ? OR ? = -1) " + //Bug here, Change from <= to >=
-                "   AND (price <= ? OR ? = -1) " +//Added criteria for max price (question mark)
+                "   AND (price >= ? OR ? = -1) " + //Bug here, I Changed from <= to >=
+                "   AND (price <= ? OR ? = -1) " +//Added new criteria for max price (question mark)
                 "   AND (color = ? OR ? = '') ";
 
         categoryId = categoryId == null ? -1 : categoryId;
@@ -35,9 +40,10 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         maxPrice = maxPrice == null ? new BigDecimal("-1") : maxPrice;
         color = color == null ? "" : color; // if color is null make the value blank else keep the value provided
 
-        try (Connection connection = getConnection())
+        try (Connection connection = getConnection()) //open connection with the database
         {
             PreparedStatement statement = connection.prepareStatement(sql);
+            //Set the parameters for all and replace the question mark
             statement.setInt(1, categoryId);
             statement.setInt(2, categoryId);
             statement.setBigDecimal(3, minPrice);
@@ -47,12 +53,13 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setString(7, color);
             statement.setString(8, color);
 
+            //Execute the query and store the result in result set
             ResultSet row = statement.executeQuery();
 
-            while (row.next())
+            while (row.next()) //Loops through each row in the result set.
             {
-                Product product = mapRow(row);
-                products.add(product);
+                Product product = mapRow(row); //Converts each row into a Product object using the mapRow
+                products.add(product); // add the mapped products to the products list
             }
         }
         catch (SQLException e)
@@ -60,19 +67,21 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             throw new RuntimeException(e);
         }
 
-        return products;
+        return products; //return the list of products
     }
+
 //Interacting with the database to retrieve data
     @Override
     public List<Product> listByCategoryId(int categoryId)
     {
         List<Product> products = new ArrayList<>();
-
+//SqlQuery
         String sql = "SELECT * FROM products " +
                     " WHERE category_id = ? ";
-
+//Connect with the database
         try (Connection connection = getConnection())
         {
+            //Execute the query
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, categoryId);
 
@@ -116,6 +125,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         return null;
     }
 
+    //Wrong method to be called
     @Override
     public Product create(Product product)
     {
@@ -157,9 +167,11 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         return null;
     }
 
+    //Correct method to be called to fix the bug
     @Override
     public void update(int productId, Product product)
     {
+        //Query
         String sql = "UPDATE products" +
                 " SET name = ? " +
                 "   , price = ? " +
